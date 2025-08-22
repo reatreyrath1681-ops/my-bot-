@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="km">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FB Sale Chatbot</title>
+  <style>
+    body {
+      font-family: 'Khmer OS Battambang', Arial, sans-serif;
+      background: #f0f2f5;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .chat-container {
+      width: 400px;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.1);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    .chat-header {
+      background: #1877f2;
+      color: white;
+      padding: 12px;
+      text-align: center;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .chat-header img {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+    }
+    .chat-box {
+      flex: 1;
+      padding: 12px;
+      overflow-y: auto;
+      border-bottom: 1px solid #ddd;
+    }
+    .message {
+      margin: 6px 0;
+      padding: 8px 12px;
+      border-radius: 12px;
+      max-width: 80%;
+      line-height: 1.4;
+    }
+    .user { background: #1877f2; color: white; align-self: flex-end; }
+    .bot { background: #e5e5e5; align-self: flex-start; }
+    .input-area {
+      display: flex;
+      border-top: 1px solid #ddd;
+    }
+    .input-area input {
+      flex: 1;
+      border: none;
+      padding: 10px;
+      border-radius: 0 0 0 12px;
+      font-family: 'Khmer OS Battambang';
+    }
+    .input-area button {
+      border: none;
+      padding: 10px;
+      background: #1877f2;
+      color: white;
+      cursor: pointer;
+      border-radius: 0 0 12px 0;
+    }
+    .menu {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 8px;
+    }
+    .menu button {
+      flex: 1;
+      padding: 8px;
+      background: #42b72a;
+      border: none;
+      border-radius: 8px;
+      color: white;
+      font-size: 14px;
+      cursor: pointer;
+    }
+    .menu button.reset { background: #ff3b30; }
+    .menu button.telegram { background: #0088cc; }
+    .menu button.facebook { background: #1877f2; }
+    .menu button:hover { opacity: 0.85; }
+  </style>
+</head>
+<body>
+  <div class="chat-container">
+    <div class="chat-header">
+      <img src="https://scontent.fkhn2-1.fna.fbcdn.net/v/t39.30808-6/123650026_8024826_n.jpg" alt="Logo">
+      🤖 Chatbot លក់ផលិតផល
+    </div>
+    <div class="chat-box" id="chat-box">
+      <div class="message bot">សួស្តី! 🙏​ សូមស្វាគមន៍មកកាន់ហាង 🛒 ជ្រើសរើស Menu ផលិតផល ឬ ទំនាក់ទង:</div>
+      <div class="menu">
+        <button onclick="quickReply('Flash Boot')">💾 Flash Boot Windows 12$</button>
+        <button onclick="quickReply('Computer')">💻 Computer 70$</button>
+        <button onclick="quickReply('USB Wifi')">📡 USB Wifi 10$</button>
+        <button class="facebook" onclick="openFacebook()">📘 Facebook Page</button>
+        <button class="telegram" onclick="openTelegramGroup()">👥 Telegram Group</button>
+        <button class="telegram" onclick="openTelegramSale()">📨 Telegram Sale</button>
+        <button class="reset" onclick="resetChat()">🔄 ចាប់ផ្តើមម្ដងទៀត</button>
+      </div>
+    </div>
+    <div class="input-area">
+      <input type="text" id="user-input" placeholder="វាយសាររបស់អ្នក..." onkeypress="handleEnter(event)">
+      <button onclick="sendMessage()">Send</button>
+    </div>
+  </div>
+
+  <script>
+    function handleEnter(e){
+      if(e.key === "Enter") sendMessage();
+    }
+
+    function sendMessage(){
+      let input = document.getElementById("user-input");
+      let text = input.value.trim();
+      if(!text) return;
+      displayMessage(text, "user");
+      input.value = "";
+      botReply(text);
+    }
+
+    function quickReply(text){
+      displayMessage(text, "user");
+      botReply(text);
+    }
+
+    function displayMessage(text, sender){
+      let chatBox = document.getElementById("chat-box");
+      let msg = document.createElement("div");
+      msg.className = "message " + sender;
+      msg.innerText = text;
+      chatBox.appendChild(msg);
+      chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    function botReply(input){
+      setTimeout(()=>{
+        let reply = getBotResponse(input);
+        displayMessage(reply, "bot");
+      },500);
+    }
+
+    function getBotResponse(input){
+      input = input.toLowerCase();
+      if(input.includes("flash boot")) return "💾 Flash Boot Windows តម្លៃ 12$ ✅ មានស្តុក Ready!";
+      if(input.includes("computer")) return "💻 Computer ថ្មី តម្លៃ 70$ 🎁 មាន Mouse + Keyboard Free";
+      if(input.includes("usb wifi")) return "📡 USB Wifi តម្លៃ 10$ ✅ ប្រើបានទាំង Laptop និង Desktop";
+      if(input.includes("hello") || input.includes("hi") || input.includes("សួស្តី"))
+        return "សួស្តី 🙏 សូមជ្រើសរើសពី Menu ផលិតផល ឬ ទំនាក់ទង!";
+      return "សូមជ្រើសរើសពី Menu: Flash Boot, Computer, USB Wifi, Facebook, Telegram Group, Telegram Sale, ឬ ចាប់ផ្តើមម្ដងទៀត។";
+    }
+
+    function resetChat(){
+      let chatBox = document.getElementById("chat-box");
+      chatBox.innerHTML = `
+        <div class="message bot">សួស្តី! 🙏​ សូមស្វាគមន៍មកកាន់ហាង 🛒 ជ្រើសរើស Menu ផលិតផល ឬ ទំនាក់ទង:</div>
+        <div class="menu">
+          <button onclick="quickReply('Flash Boot')">💾 Flash Boot Windows 12$</button>
+          <button onclick="quickReply('Computer')">💻 Computer 70$</button>
+          <button onclick="quickReply('USB Wifi')">📡 USB Wifi 10$</button>
+          <button class="facebook" onclick="openFacebook()">📘 Facebook Page</button>
+          <button class="telegram" onclick="openTelegramGroup()">👥 Telegram Group</button>
+          <button class="telegram" onclick="openTelegramSale()">📨 Telegram Sale</button>
+          <button class="reset" onclick="resetChat()">🔄 ចាប់ផ្តើមម្ដងទៀត</button>
+        </div>
+      `;
+    }
+
+    function openFacebook(){
+      window.open("https://www.facebook.com/SCS311855","_blank");
+    }
+
+    function openTelegramGroup(){
+      window.open("https://t.me/SunComputerSolution","_blank");
+    }
+
+    function openTelegramSale(){
+      window.open("https://t.me/Sopharat_Chhoy","_blank");
+    }
+  </script>
+</body>
+</html>
